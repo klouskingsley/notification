@@ -9,7 +9,8 @@
   <body>
     <button onclick="notifyMe()">Notify me!</button>
     <script>
-      function notifyMe() {
+      let timer = null;
+      function notify() {
         // 先检查浏览器是否支持
         if (!("Notification" in window)) {
           alert("This browser does not support desktop notification");
@@ -36,6 +37,14 @@
 
         // 最后，如果执行到这里，说明用户已经拒绝对相关通知进行授权
         // 出于尊重，我们不应该再打扰他们了
+      }
+      function notifyMe() {
+        if (timer) {
+          clearInterval(timer);
+        }
+        timer = setInterval(() => {
+          notify();
+        }, 3e3);
       }
     </script>
   </body>
