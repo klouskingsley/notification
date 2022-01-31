@@ -7,18 +7,11 @@
     <title>Document</title>
   </head>
   <body>
+    <input type="number" id="minutes" /> minutes <br /><br /><br />
+    提醒内容: <input type="text" id="content" /> <br /><br /><br />
     <button onclick="notifyMe()">Notify me!</button>
     <script>
       navigator.serviceWorker.register("sw.js");
-
-      Notification.requestPermission(function (result) {
-        if (result === "granted") {
-          navigator.serviceWorker.ready.then(function (registration) {
-            registration.showNotification("Notification with ServiceWorker");
-          });
-        }
-      });
-
       function setupPermission() {
         if (!("Notification" in window)) {
           alert("This browser does not support desktop notification");
@@ -35,20 +28,24 @@
       }
 
       let timer = null;
-      function notify() {
+      function notify(content) {
         navigator.serviceWorker.ready.then(function (registration) {
-          registration.showNotification("Notification with ServiceWorker");
+          registration.showNotification(content);
         });
       }
 
       function notifyMe() {
+        var minutes = document.getElementById("minutes").value;
+        var content = document.getElementById("content").value;
+        alert(`每${minutes}分钟提醒一次, 内容为: ${content}`);
         setupPermission();
         if (timer) {
           clearInterval(timer);
         }
+        notify(content);
         timer = setInterval(() => {
-          notify();
-        }, 3e3);
+          notify(content);
+        }, minutes * 60 * 1e3);
       }
     </script>
   </body>
